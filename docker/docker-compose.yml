@@ -1,0 +1,45 @@
+version: '3.1'
+
+services:
+  api:
+    image: point-card-api
+    build:
+      context: ../
+      dockerfile: docker/ruby/Dockerfile
+    restart: always
+    tty: true
+    stdin_open: true
+    ports:
+      - 3000:3000
+    environment:
+      DB_HOST: db
+      DB_USER: root
+      DB_PASSWORD: password
+      EDITOR: vim
+      JWT_DECODE_VARIFY: "off" 
+    volumes:
+      - ../point-card-api:/usr/src/point-card-api
+      - ./ruby/bundle:/usr/local/bundle
+    working_dir: /usr/src/point-card-api
+    command: bash -c "bundle install && rails server -b 0.0.0.0"
+    depends_on:
+      - db
+
+  db:
+    image: mariadb:10.3.14
+    restart: always
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      # MYSQL_DATABASE: {database}
+      # MYSQL_USER: {user}
+      # MYSQL_PASSWORD: {password}
+      # TZ: Asia/Tokyo
+    volumes:
+      - db:/var/lib/mysql
+      - ./mariadb/conf/point.cnf:/etc/mysql/conf.d/point.cnf
+
+volumes:
+  db:
+    driver: local

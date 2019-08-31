@@ -1,0 +1,1 @@
+json.partial! "/point_cards/issue_unit", locals: { issue_unit: @issue_unit }

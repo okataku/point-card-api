@@ -1,0 +1,129 @@
+@startuml erd
+
+skinparam monochrome true
+
+entity access_tokens {
+  +id
+  ---
+  #user_id
+  access_token
+  issued_at
+  expires_in
+  expire_time
+  +refresh_token
+  refresh_token
+  refresh_token_expires_in
+  refresh_token_expire_time
+  refresh_count
+}
+
+entity users {
+  +id
+  ---
+  admin
+  created_at
+  updated_at
+  *uid
+  email
+  password_digest
+  name
+  gender
+  date_of_birth
+}
+
+entity social_profiles {
+  +id
+  ---
+  created_at
+  updated_at
+  #user_id
+  provider
+  uid
+  raw
+}
+
+entity point_cards {
+  +id
+  ---
+  created_at
+  updated_at
+  issue_count
+  *name
+  display_name
+  description
+  image_url
+}
+
+entity point_card_collaborators {
+  +id
+  ---
+  created_at
+  updated_at
+  #point_card_id
+  #user_id
+  permission
+}
+
+entity point_issue_units {
+  +id
+  ---
+  created_at
+  updated_at
+  #point_card_id
+  name
+  description
+  point
+  expires_in
+}
+
+entity point_collect_units {
+  +id
+  ---
+  created_at
+  updated_at
+  #point_card_id
+  name
+  description
+  point
+}
+
+entity point_card_issues {
+  +id
+  ---
+  created_at
+  updated_at
+  #point_card_id
+  no
+  #user_id
+  point
+}
+
+entity points {
+  +id
+  ---
+  created_at
+  updated_at
+  #point_card_id
+  #point_card_issue_id
+  issued_by
+  issued_at
+  total
+  point
+  remaining_point
+  expires_in
+  expired_at
+  expired
+}
+
+users ||--o{ access_tokens
+users ||--o{ social_profiles
+users ||--o{ point_card_issues
+users ||--o{ point_card_collaborators
+users ||--o{ points
+point_cards ||--o{ point_issue_units
+point_cards ||--o{ point_collect_units
+point_cards ||--o{ point_card_collaborators
+point_cards ||--o{ point_card_issues
+point_card_issues ||--o{ points
+
+@enduml
